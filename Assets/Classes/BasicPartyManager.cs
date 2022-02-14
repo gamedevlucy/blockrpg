@@ -8,7 +8,6 @@ public class BasicPartyManager : MonoBehaviour
   public List<GameObject> mPartyMembers = new List<GameObject>();
   public int mFacingDir;
 
-  
 
   // Start is called before the first frame update
   void Start()
@@ -45,30 +44,41 @@ public class BasicPartyManager : MonoBehaviour
       return;
     }
 
-    const float spacing = 0.0f;
+    const float spacing = 0.4f;
+
+    SpriteRenderer[] sprites = new SpriteRenderer[mPartyMembers.Count];
+
+    int partyIndex = 0;
+    foreach(GameObject partyMember in mPartyMembers)
+    {
+      GameObject characterSprite = partyMember.transform.Find("CharacterSprite").gameObject;
+      sprites[partyIndex] = characterSprite.GetComponent<SpriteRenderer>();
+      ++partyIndex;
+    }
+
+
 
     float totalPartyHeight = 0.0f;
-    int partyIndex;
     for(partyIndex = 0; partyIndex < (mPartyMembers.Count - 1); ++partyIndex)
     {
-      GameObject partyMember = mPartyMembers[partyIndex];
-      SpriteRenderer memberSprite = partyMember.GetComponent<SpriteRenderer>();
-      totalPartyHeight += (memberSprite.sprite.rect.height + spacing);
+      totalPartyHeight += sprites[partyIndex].bounds.size.y + spacing;
     }
-    totalPartyHeight += mPartyMembers[partyIndex].GetComponent<SpriteRenderer>().sprite.rect.height;
+    totalPartyHeight += sprites[partyIndex].bounds.size.y;
+
 
     Vector3 startPosition = getRootPosition();
     startPosition.y = totalPartyHeight * 0.5f;
+    partyIndex = 0;
     foreach(GameObject partyMember in mPartyMembers)
     {
-      SpriteRenderer memberSprite = partyMember.GetComponent<SpriteRenderer>();
-      float halfHeight = memberSprite.sprite.rect.height;
+      float halfHeight = sprites[partyIndex].bounds.size.y * 0.5f;
       startPosition.y -= halfHeight;
-      partyMember.GetComponent<Transform>().position = startPosition;
+      partyMember.transform.position = startPosition;
       startPosition.y -= (halfHeight + spacing);
 
-
       startPosition.x += (float)mFacingDir * spacing;
+
+      ++partyIndex;
     }
   }
 

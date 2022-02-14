@@ -8,6 +8,9 @@ public class BasicCharacter : MonoBehaviour
   // Start is called before the first frame update
   void Start()
   {
+    GameObject healthbarObject = transform.Find("HealthbarContainer").gameObject;
+    healthbar characterHealthbar = healthbarObject.GetComponent<healthbar>();
+    characterHealthbar.UpdateForNewStats(gameObject);
     
   }
 
@@ -77,7 +80,5 @@ public class BasicCharacter : MonoBehaviour
 
   public void Die()
   {
-    SpriteRenderer sprite = GetComponent<SpriteRenderer>();
-    sprite.transform.Rotate(0.0f, 0.0f, 90.0f);
   }
 }
